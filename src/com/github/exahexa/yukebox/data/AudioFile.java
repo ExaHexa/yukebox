@@ -16,10 +16,20 @@ public class AudioFile {
 	private String filePath;
 	private String fileName;
 	
-	/**
-	 * constructs a new audio file
-	 */
-	public AudioFile() {
+	
+	public AudioFile(String title, byte track, 
+					 int duration, String filePath, String fileName) {
+		if( title != null && filePath != null && fileName != null &&
+			!title.isEmpty() && !filePath.isEmpty() && !fileName.isEmpty()) {
+			this.title = title;
+			this.track = track;
+			this.duration = duration;
+			this.filePath = filePath;
+			this.fileName = fileName;
+		}
+		else {
+			throw new IllegalArgumentException();
+		}
 		
 	}
 
@@ -28,7 +38,12 @@ public class AudioFile {
 	}
 
 	public void setTitle(String title) {
-		this.title = title;
+		if(title != null && !title.isEmpty()) {
+			this.title = title;
+		}
+		else {
+			throw new IllegalArgumentException();
+		}
 	}
 
 	public byte getTrack() {
@@ -44,7 +59,13 @@ public class AudioFile {
 	}
 
 	public void setFilePath(String filePath) {
-		this.filePath = filePath;
+		if(filePath != null && !filePath.isEmpty()) {
+			this.filePath = filePath;
+		}
+		else {
+			throw new IllegalArgumentException();
+		}
+		
 	}
 
 	public String getFileName() {
@@ -52,7 +73,13 @@ public class AudioFile {
 	}
 
 	public void setFileName(String fileName) {
-		this.fileName = fileName;
+		if(fileName != null && !fileName.isEmpty()) {
+			this.fileName = fileName;
+		}
+		else {
+			throw new IllegalArgumentException();
+		}
+		
 	}
 
 	public int getDuration() {

@@ -15,7 +15,13 @@ public class Artist {
 	private String name;
 	private LinkedList<Album> albumList;
 	
-	public Artist() {
+	public Artist(String name) {
+		if(name != null && !name.isEmpty()) {
+			this.name = name;
+		}
+		else {
+			throw new IllegalArgumentException();
+		}
 		
 	}
 	
@@ -24,7 +30,13 @@ public class Artist {
 	}
 	
 	public void setName(String name) {
-		this.name = name;
+		if(name != null && !name.isEmpty()) {
+			this.name = name;
+		}
+		else {
+			throw new IllegalArgumentException();
+		}
+		
 	}
 	
 	public LinkedList<Album> getAlbumList(){
@@ -35,6 +47,9 @@ public class Artist {
 		if(album != null) {
 			if(!containsAlbum(album)) {
 				this.albumList.add(album);
+			}
+			else {
+				throw new ElementAlreadyExistsException();
 			}
 		}
 		else {

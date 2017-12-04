@@ -15,8 +15,13 @@ public class Album {
 	private String name;
 	private LinkedList<AudioFile> trackList;
 
-	public Album() {
-		
+	public Album(String name) {
+		if(name != null && !name.isEmpty()) {
+			this.name = name;
+		}
+		else {
+			throw new IllegalArgumentException();
+		}
 	}
 	
 	public String getName() {
@@ -35,7 +40,10 @@ public class Album {
 		if(track != null) {
 			if(!containsTrack(track)) {
 				this.trackList.add(track);
-			}			
+			}
+			else {
+				throw new ElementAlreadyExistsException();
+			}
 		}
 		else {
 			throw new IllegalArgumentException();
