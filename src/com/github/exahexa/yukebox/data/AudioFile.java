@@ -9,34 +9,54 @@ package com.github.exahexa.yukebox.data;
  */
 public class AudioFile {
 	
-	//private int id;
 	private String title;
-	private byte track;
-	private int duration;
+	private String trackNr;
+	private float duration;
 	private String filePath;
 	private String fileName;
 	
+	private String artistKey;
+	private String albumKey;
 	
-	public AudioFile(String title, byte track, 
-					 int duration, String filePath, String fileName) {
-		if( title != null && filePath != null && fileName != null &&
-			!title.isEmpty() && !filePath.isEmpty() && !fileName.isEmpty()) {
+	/**
+	 * @param title
+	 * @param track 
+	 * @param duration
+	 * @param filePath
+	 * @param fileName
+	 */
+	public AudioFile(String title, String trackNr, float duration, String filePath,
+							String fileName, String artist, String album) {
+		if( title != null && trackNr != null && filePath != null && fileName != null &&
+			artist != null && album != null && !title.isEmpty() &&
+			!filePath.isEmpty() && !fileName.isEmpty() && !artist.isEmpty()
+													   && !album.isEmpty()) {
 			this.title = title;
-			this.track = track;
+			this.trackNr = trackNr;
 			this.duration = duration;
 			this.filePath = filePath;
 			this.fileName = fileName;
+			this.artistKey = artist.toLowerCase();
+			this.albumKey = album.toLowerCase();
 		}
 		else {
 			throw new IllegalArgumentException();
 		}
 		
 	}
-
+	
+	/**
+	 * 
+	 * @return
+	 */
 	public String getTitle() {
 		return title;
 	}
-
+	
+	/**
+	 * 
+	 * @param title
+	 */
 	public void setTitle(String title) {
 		if(title != null && !title.isEmpty()) {
 			this.title = title;
@@ -45,19 +65,35 @@ public class AudioFile {
 			throw new IllegalArgumentException();
 		}
 	}
-
-	public byte getTrack() {
-		return track;
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getTrackNr() {
+		return trackNr;
 	}
 
-	public void setTrack(byte track) {
-		this.track = track;
+	/**
+	 * 
+	 * @param track
+	 */
+	public void setTrackNr(String trackNr) {
+		this.trackNr = trackNr;
 	}
-
+	
+	/**
+	 * 
+	 * @return
+	 */
 	public String getFilePath() {
 		return filePath;
 	}
-
+	
+	/**
+	 * 
+	 * @param filePath
+	 */
 	public void setFilePath(String filePath) {
 		if(filePath != null && !filePath.isEmpty()) {
 			this.filePath = filePath;
@@ -67,11 +103,19 @@ public class AudioFile {
 		}
 		
 	}
-
+	
+	/**
+	 * 
+	 * @return
+	 */
 	public String getFileName() {
 		return fileName;
 	}
-
+	
+	/**
+	 * 
+	 * @param fileName
+	 */
 	public void setFileName(String fileName) {
 		if(fileName != null && !fileName.isEmpty()) {
 			this.fileName = fileName;
@@ -81,23 +125,55 @@ public class AudioFile {
 		}
 		
 	}
-
+	
+	/**
+	 * 
+	 * @return
+	 */
 	public int getDuration() {
-		return duration;
+		return (int)duration;
+	}
+	
+	/**
+	 * @return the artistKey
+	 */
+	public String getArtistKey() {
+		return artistKey;
 	}
 
+	/**
+	 * @param artistKey the artistKey to set
+	 */
+	public void setArtistKey(String artistKey) {
+		this.artistKey = artistKey.toLowerCase();
+	}
+
+	/**
+	 * @return the albumKey
+	 */
+	public String getAlbumKey() {
+		return albumKey;
+	}
+
+	/**
+	 * @param albumKey the albumKey to set
+	 */
+	public void setAlbumKey(String albumKey) {
+		this.albumKey = albumKey.toLowerCase();
+	}
+	
+	/**
+	 * @see 
+	 */
+	@Override
 	public boolean equals(Object obj) {
 		return (obj != null) && (obj instanceof AudioFile)
 				&& (this.title.equals( ((AudioFile)obj).getTitle() ))
 				&& (this.filePath.equals( ((AudioFile)obj).getFilePath() ))
 				&& (this.fileName.equals( ((AudioFile)obj).getFileName() ))
-				&& (this.track == ((AudioFile)obj).getTrack() )
+				&& (this.trackNr == ((AudioFile)obj).getTrackNr() )
 				&& (this.duration == ((AudioFile)obj).getDuration() );
 	}
-
-	
-	
-	
 	
 
 }

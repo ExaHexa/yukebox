@@ -3,7 +3,7 @@
  */
 package com.github.exahexa.yukebox.data;
 
-import java.util.LinkedList;
+import java.util.HashMap;
 
 /**
  * @author exahexa
@@ -11,10 +11,13 @@ import java.util.LinkedList;
  */
 public class Artist {
 	
-	//private int id;
 	private String name;
-	private LinkedList<Album> albumList;
-	
+	private HashMap<String, Album> albums;
+		
+	/**
+	 * 
+	 * @param name
+	 */
 	public Artist(String name) {
 		if(name != null && !name.isEmpty()) {
 			this.name = name;
@@ -22,31 +25,18 @@ public class Artist {
 		else {
 			throw new IllegalArgumentException();
 		}
-		
+		this.albums = new HashMap<String, Album>();
 	}
 	
-	public String getName() {
-		return this.name;
-	}
 	
-	public void setName(String name) {
-		if(name != null && !name.isEmpty()) {
-			this.name = name;
-		}
-		else {
-			throw new IllegalArgumentException();
-		}
-		
-	}
-	
-	public LinkedList<Album> getAlbumList(){
-		return this.albumList;
-	}
-	
+	/**
+	 * 
+	 * @param album
+	 */
 	public void addAlbum(Album album) {
 		if(album != null) {
 			if(!containsAlbum(album)) {
-				this.albumList.add(album);
+				this.albums.put(album.getName().toLowerCase(), album);
 			}
 			else {
 				throw new ElementAlreadyExistsException();
@@ -58,18 +48,67 @@ public class Artist {
 		
 	}
 	
+	/**
+	 * 
+	 * @param album
+	 * @return
+	 */
 	public boolean containsAlbum(Album album) {
-		return this.albumList.contains(album);
+		return !albums.isEmpty() && albums.containsKey(album.getName().toLowerCase());
 	}
 	
+	public boolean containsAlbumByKey(String albumName) {
+		return !albumName.isEmpty() && albums.containsKey(albumName.toLowerCase());
+	}
+	
+	/**
+	 * 
+	 * @param album
+	 */
 	public void deleteAlbum(Album album) {
-		this.albumList.remove(album);
+		this.albums.remove(album.getName().toLowerCase());
+	}
+		
+	/**
+	 * 
+	 * @return
+	 */
+	public String getName() {
+		return this.name;
 	}
 	
+	/**
+	 * 
+	 * @param name
+	 */
+	public void setName(String name) {
+		if(name != null && !name.isEmpty()) {
+			this.name = name;
+		}
+		else {
+			throw new IllegalArgumentException();
+		}
+		
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public HashMap<String, Album> getAlbums(){
+		return this.albums;
+	}
+
+	/**
+	 * @see
+	 */
+	@Override
 	public boolean equals(Object obj) {
 		return (obj != null) && (obj instanceof Artist)
 				&& (this.name.equals( ((Artist)obj).getName() ))
-				&& (this.albumList.equals( ((Artist)obj).getAlbumList() ));
+				&& (this.albums.equals( ((Artist)obj).getAlbums() ));
 	}
+
+
 
 }
