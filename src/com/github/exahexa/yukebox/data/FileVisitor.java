@@ -109,12 +109,14 @@ public class FileVisitor extends SimpleFileVisitor<Path> {
 		}
 		
 		System.out.println(f.getAbsolutePath());
-		if(artist == null || !MusicDB.getInstance().containsArtistByKey(artistName)) {
+		if(artist == null || !MusicDB.getInstance()
+							 .containsArtistByKey(artistName)) {
 			artist = new Artist(artistName);
 			MusicDB.getInstance().addArtist(artist);
 		}
 		
-		if(album == null || !album.getName().equals(albumName)) {
+		if(album == null || !MusicDB.getInstance()
+							.containsAlbumByKey(artistName, albumName)) {
 			if(metadata.get(XMPDM.RELEASE_DATE).isEmpty()) {
 				album = new Album(albumName, artistName);
 			}

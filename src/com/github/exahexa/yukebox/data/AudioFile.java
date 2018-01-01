@@ -3,11 +3,18 @@
  */
 package com.github.exahexa.yukebox.data;
 
+import java.io.Serializable;
+
 /**
  * @author exahexa
  * 
  */
-public class AudioFile {
+public class AudioFile implements Serializable{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8640513031864985031L;
 	
 	private String title;
 	private String trackNr;

@@ -3,22 +3,28 @@
  */
 package com.github.exahexa.yukebox.data;
 
-import java.util.HashMap;
+import java.io.Serializable;
+
 import com.google.common.collect.HashMultimap;
 
 /**
  * @author exahexa
  *
  */
-public class Album {
+public class Album implements Serializable{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4801091934373896376L;
 	
 	private String name;
 	private int releaseDate;
-	private HashMap<String, AudioFile> tracks;
+	private HashMultimap<String, AudioFile> tracks;
 	
 	private String artistKey;
 	
-	private int initCapacity = 19;
+	//private int initCapacity = 19;
 	
 	
 	public Album(String name, String artist) {
@@ -30,7 +36,7 @@ public class Album {
 		else {
 			throw new IllegalArgumentException();
 		}
-		this.tracks = new HashMap<String, AudioFile>(initCapacity);
+		this.tracks = HashMultimap.create();
 	}
 	
 	/**
@@ -48,7 +54,7 @@ public class Album {
 		else {
 			throw new IllegalArgumentException();
 		}
-		this.tracks = new HashMap<String, AudioFile>(initCapacity);
+		this.tracks = HashMultimap.create();
 	}
 	
 	
@@ -77,8 +83,8 @@ public class Album {
 	 * @return
 	 */
 	public boolean containsTrack(AudioFile track) {
-		return !tracks.isEmpty() && tracks.containsKey(
-									 track.getTitle().toLowerCase());
+		return !tracks.isEmpty() && tracks.containsEntry(
+									 track.getTitle().toLowerCase(), track);
 	}
 	
 	/**
@@ -86,7 +92,7 @@ public class Album {
 	 * @param track
 	 */
 	public void deleteTrack(AudioFile track) {
-		this.tracks.remove(track.getTitle().toLowerCase());
+		this.tracks.remove(track.getTitle().toLowerCase(), track);
 	}
 	
 	/**
@@ -109,7 +115,7 @@ public class Album {
 	 * 
 	 * @return
 	 */
-	public HashMap<String, AudioFile> getTracks(){
+	public HashMultimap<String, AudioFile> getTracks(){
 		return this.tracks;
 	}
 	

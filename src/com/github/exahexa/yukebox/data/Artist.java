@@ -3,15 +3,22 @@
  */
 package com.github.exahexa.yukebox.data;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  * @author exahexa
  *
  */
-public class Artist {
+public class Artist implements Serializable{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1612965854542176473L;
 	
 	private String name;
+	//private HashMultimap<String, Album> albums;
 	private HashMap<String, Album> albums;
 		
 	/**
@@ -26,6 +33,7 @@ public class Artist {
 			throw new IllegalArgumentException();
 		}
 		this.albums = new HashMap<String, Album>();
+		//this.albums = HashMultimap.create();
 	}
 	
 	
@@ -54,7 +62,8 @@ public class Artist {
 	 * @return
 	 */
 	public boolean containsAlbum(Album album) {
-		return !albums.isEmpty() && albums.containsKey(album.getName().toLowerCase());
+		return !albums.isEmpty() && albums.containsKey(
+						album.getName().toLowerCase());
 	}
 	
 	public boolean containsAlbumByKey(String albumName) {
@@ -66,7 +75,7 @@ public class Artist {
 	 * @param album
 	 */
 	public void deleteAlbum(Album album) {
-		this.albums.remove(album.getName().toLowerCase());
+		this.albums.remove(album.getName().toLowerCase(), album);
 	}
 		
 	/**

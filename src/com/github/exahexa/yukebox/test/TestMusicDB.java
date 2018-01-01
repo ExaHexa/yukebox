@@ -49,7 +49,8 @@ public class TestMusicDB {
 
 	@Test
 	public void testParse() throws Exception{
-		MusicDB.getInstance().parse();
+		MusicDB.getInstance().deserialize();
+		MusicDB.getInstance().dbOutput();
 	}
 
 
