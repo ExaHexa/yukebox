@@ -11,13 +11,13 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.github.exahexa.yukebox.data.MusicDB;
+import com.github.exahexa.yukebox.data.MusicLibraryAdmin;
 
 /**
  * @author exahexa
  *
  */
-public class TestMusicDB {
+public class TestMusicLibraryAdmin {
 
 	/**
 	 * @throws java.lang.Exception
@@ -48,10 +48,9 @@ public class TestMusicDB {
 	}
 
 	@Test
-	public void testParse() throws Exception{
-		MusicDB.getInstance().deserialize();
-		MusicDB.getInstance().dbOutput();
+	public void test() throws Exception{
+		MusicLibraryAdmin musicLAdm = new MusicLibraryAdmin();
+		musicLAdm.parse();
 	}
-
 
 }

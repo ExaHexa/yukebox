@@ -52,14 +52,14 @@ public class TestAlbum {
 	public void testConstr2Param() {
 		Album t = new Album("test", "artist");
 		assertEquals(t.getName(), "test");
-		assertEquals(t.getArtistKey(), "artist");
+		assertEquals(t.getArtist(), "artist");
 	}
 	
 	@Test 
 	public void testConstr3Param() {
 		Album t = new Album("test", "artist", 15);
 		assertEquals(t.getName(), "test");
-		assertEquals(t.getArtistKey(), "artist");
+		assertEquals(t.getArtist(), "artist");
 		assertEquals(t.getReleaseDate(), 15);
 	}
 	

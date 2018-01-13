@@ -9,21 +9,21 @@ import java.io.Serializable;
  * @author exahexa
  * 
  */
-public class AudioFile implements Serializable{
+public class AudioFile implements Serializable, MusicLibObj{
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -8640513031864985031L;
 	
-	private String title;
+	private String name;
 	private String trackNr;
 	private float duration;
 	private String filePath;
 	private String fileName;
-	
-	private String artistKey;
-	private String albumKey;
+
+	private String artist;
+	private String album;
 	
 	/**
 	 * @param title
@@ -32,19 +32,19 @@ public class AudioFile implements Serializable{
 	 * @param filePath
 	 * @param fileName
 	 */
-	public AudioFile(String title, String trackNr, float duration, String filePath,
+	public AudioFile(String name, String trackNr, float duration, String filePath,
 							String fileName, String artist, String album) {
-		if( title != null && trackNr != null && filePath != null && fileName != null &&
-			artist != null && album != null && !title.isEmpty() &&
+		if( name != null && trackNr != null && filePath != null && fileName != null &&
+			artist != null && album != null && !name.isEmpty() &&
 			!filePath.isEmpty() && !fileName.isEmpty() && !artist.isEmpty()
 													   && !album.isEmpty()) {
-			this.title = title;
+			this.name = name;
 			this.trackNr = trackNr;
 			this.duration = duration;
 			this.filePath = filePath;
 			this.fileName = fileName;
-			this.artistKey = artist.toLowerCase();
-			this.albumKey = album.toLowerCase();
+			this.artist = artist;
+			this.album = album;
 		}
 		else {
 			throw new IllegalArgumentException();
@@ -56,17 +56,17 @@ public class AudioFile implements Serializable{
 	 * 
 	 * @return
 	 */
-	public String getTitle() {
-		return title;
+	public String getName() {
+		return name;
 	}
 	
 	/**
 	 * 
 	 * @param title
 	 */
-	public void setTitle(String title) {
-		if(title != null && !title.isEmpty()) {
-			this.title = title;
+	public void setName(String name) {
+		if(name != null && !name.isEmpty()) {
+			this.name = name;
 		}
 		else {
 			throw new IllegalArgumentException();
@@ -141,32 +141,55 @@ public class AudioFile implements Serializable{
 		return (int)duration;
 	}
 	
+	public String getDurationFormat() {
+		int sec = (int)(duration/1000)%60;
+		int min = (int)(duration/(60*1000))%60;
+		int hour = (int)(duration/(1000*3600));
+		String ret = "";
+		
+		if(min < 10) {
+			ret += 0+""+min+":";
+		}else {
+			ret += min+":";
+		}
+		
+		if(sec < 10) {
+			ret += 0+""+sec;
+		}else {
+			ret += sec;
+		}
+		if(hour > 0) {
+			ret = hour+":"+ret;
+		}
+		return ret;
+	}
+	
 	/**
 	 * @return the artistKey
 	 */
-	public String getArtistKey() {
-		return artistKey;
+	public String getArtist() {
+		return artist;
 	}
 
 	/**
 	 * @param artistKey the artistKey to set
 	 */
-	public void setArtistKey(String artistKey) {
-		this.artistKey = artistKey.toLowerCase();
+	public void setArtistKey(String artist) {
+		this.artist = artist;
 	}
 
 	/**
 	 * @return the albumKey
 	 */
-	public String getAlbumKey() {
-		return albumKey;
+	public String getAlbum() {
+		return album;
 	}
 
 	/**
 	 * @param albumKey the albumKey to set
 	 */
-	public void setAlbumKey(String albumKey) {
-		this.albumKey = albumKey.toLowerCase();
+	public void setAlbumKey(String album) {
+		this.album = album;
 	}
 	
 	/**
@@ -175,7 +198,7 @@ public class AudioFile implements Serializable{
 	@Override
 	public boolean equals(Object obj) {
 		return (obj != null) && (obj instanceof AudioFile)
-				&& (this.title.equals( ((AudioFile)obj).getTitle() ))
+				&& (this.name.equals( ((AudioFile)obj).getName() ))
 				&& (this.filePath.equals( ((AudioFile)obj).getFilePath() ))
 				&& (this.fileName.equals( ((AudioFile)obj).getFileName() ))
 				&& (this.trackNr == ((AudioFile)obj).getTrackNr() )

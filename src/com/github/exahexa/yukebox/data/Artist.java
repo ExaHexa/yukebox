@@ -10,7 +10,7 @@ import java.util.HashMap;
  * @author exahexa
  *
  */
-public class Artist implements Serializable{
+public class Artist implements Serializable, MusicLibObj{
 	
 	/**
 	 * 

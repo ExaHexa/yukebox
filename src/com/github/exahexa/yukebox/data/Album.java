@@ -11,7 +11,7 @@ import com.google.common.collect.HashMultimap;
  * @author exahexa
  *
  */
-public class Album implements Serializable{
+public class Album implements Serializable, MusicLibObj{
 	
 	/**
 	 * 
@@ -22,16 +22,15 @@ public class Album implements Serializable{
 	private int releaseDate;
 	private HashMultimap<String, AudioFile> tracks;
 	
-	private String artistKey;
+	private String artist;
 	
 	//private int initCapacity = 19;
-	
 	
 	public Album(String name, String artist) {
 		if(name != null && !name.isEmpty() 
 						&& artist != null && !artist.isEmpty()) {
 			this.name = name;
-			this.artistKey = artist.toLowerCase();
+			this.artist = artist;
 		}
 		else {
 			throw new IllegalArgumentException();
@@ -48,7 +47,7 @@ public class Album implements Serializable{
 						&& artist != null && !artist.isEmpty()) {
 			this.name = name;
 			this.releaseDate = releaseDate;
-			this.artistKey = artist.toLowerCase();
+			this.artist = artist;
 			
 		}
 		else {
@@ -65,7 +64,7 @@ public class Album implements Serializable{
 	public void addTrack(AudioFile track) {
 		if(track != null) {
 			if(!containsTrack(track)) {
-				this.tracks.put(track.getTitle().toLowerCase(), track);
+				this.tracks.put(track.getName().toLowerCase(), track);
 			}
 			else {
 				throw new ElementAlreadyExistsException();
@@ -84,7 +83,7 @@ public class Album implements Serializable{
 	 */
 	public boolean containsTrack(AudioFile track) {
 		return !tracks.isEmpty() && tracks.containsEntry(
-									 track.getTitle().toLowerCase(), track);
+									 track.getName().toLowerCase(), track);
 	}
 	
 	/**
@@ -92,7 +91,7 @@ public class Album implements Serializable{
 	 * @param track
 	 */
 	public void deleteTrack(AudioFile track) {
-		this.tracks.remove(track.getTitle().toLowerCase(), track);
+		this.tracks.remove(track.getName().toLowerCase(), track);
 	}
 	
 	/**
@@ -136,15 +135,15 @@ public class Album implements Serializable{
 	/**
 	 * @return the artistKey
 	 */
-	public String getArtistKey() {
-		return artistKey;
+	public String getArtist() {
+		return artist;
 	}
 
 	/**
 	 * @param artistKey the artistKey to set
 	 */
-	public void setArtistKey(String artistKey) {
-		this.artistKey = artistKey;
+	public void setArtist(String artistKey) {
+		this.artist = artistKey;
 	}
 	
 	/**

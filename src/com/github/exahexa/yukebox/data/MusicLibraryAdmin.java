@@ -9,8 +9,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.nio.file.Files;
 import java.util.HashMap;
 
 
@@ -18,27 +16,27 @@ import java.util.HashMap;
  * @author exahexa
  *
  */
-public class MusicDB implements Serializable{
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7715861482127198975L;
-
-	private static MusicDB musicDB;
+public class MusicLibraryAdmin {
 	
 	private HashMap<String, Artist> artists;
 	private int initCapacity = 167;
+	private String filePath = "resources/db/music.db";
 	
-	private MusicDB() {
+	public MusicLibraryAdmin() {
 		artists = new HashMap<String, Artist>(initCapacity);
-	}
-	
-	public synchronized static MusicDB getInstance() {
-		if(musicDB == null) {
-			musicDB = new MusicDB();
+		try {
+			deserialize();
+		}catch(IOException e) {
+			System.out.println("file not found");
+			try {
+				parse();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}			
+		}catch(ClassNotFoundException e) {
+			System.out.println("class not found");
 		}
-		return musicDB;
 	}
 	
 	public void addArtist(Artist artist) {
@@ -57,12 +55,12 @@ public class MusicDB implements Serializable{
 	}
 	
 	public void addAlbum(Album album) {
-		artists.get(album.getArtistKey()).addAlbum(album);
+		artists.get(album.getArtist()).addAlbum(album);
 	}
 	
 	public void addTrack(AudioFile track) {
-		artists.get(track.getArtistKey()).getAlbums().get(
-					track.getAlbumKey()).addTrack(track);
+		artists.get(track.getArtist()).getAlbums().get(
+					track.getAlbum()).addTrack(track);
 	}
 	
 	public boolean containsArtist(Artist artist) {
@@ -84,10 +82,12 @@ public class MusicDB implements Serializable{
 	
 	
 	public void parse() throws IOException{
-		File f = new File("/home/exahexa/Music/Music/");
-		Files.walkFileTree(f.toPath(), new FileVisitor());
-		
+		new FileParser("/home/exahexa/Music/Music/", artists);	
 		serialize();
+	}
+	
+	public HashMap<String, Artist> getMusicLibrary(){
+		return artists;
 	}
 	
 	public void dbOutput() {
@@ -96,26 +96,32 @@ public class MusicDB implements Serializable{
 			for(Album val : value.getAlbums().values()) {
 				System.out.println("	" +val.getName());
 				for(AudioFile v : val.getTracks().values()) {
-					System.out.println("		" + v.getTitle());
+					System.out.println("		" + v.getName());
 				}
 			}
 		}
 	}
 	
-	String filePath = "src/com/github/exahexa/yukebox/data/db/music.db";
+
 	private void serialize() throws IOException{
-		ObjectOutputStream oos = new ObjectOutputStream(
-									 new FileOutputStream(filePath));
-		oos.writeObject(artists);
-		oos.close();
+		try(ObjectOutputStream oos = new ObjectOutputStream(
+									 new FileOutputStream(filePath));){
+			oos.writeObject(artists);	
+		}
 	}
 	
-	public void deserialize() throws IOException, ClassNotFoundException{
-		ObjectInputStream ois = new ObjectInputStream(
-									new FileInputStream(filePath));
-		artists = (HashMap<String, Artist>) ois.readObject();
-		ois.close();
-		
+	@SuppressWarnings("unchecked")
+	private void deserialize() throws IOException, ClassNotFoundException{
+		File f = new File(filePath);
+		if(f.exists()) {
+			try(ObjectInputStream ois = new ObjectInputStream(
+										new FileInputStream(filePath));){
+				artists = (HashMap<String, Artist>) ois.readObject();
+			}
+		}else{
+			throw new IOException();
+		}
+				
 	}
 		
 	
