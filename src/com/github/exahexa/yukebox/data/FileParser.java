@@ -23,6 +23,10 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * @author exahexa
+ * 
+ * The FileParser class extracts the meta data from the files (uses the 
+ * apache tika library) and adds artists, albums and tracks to the 
+ * music library data structure
  *
  */
 public class FileParser {
@@ -34,9 +38,9 @@ public class FileParser {
 	private Progress progress;
 	
 	/**
-	 * 
-	 * @param rootDir
-	 * @param musicLibrary
+	 * Constructs a new FileParser specified by the given arguments
+	 * @param p the path p from where to start the search for audiofiles
+	 * @param musicLibrary reference to the datastructure from MusicLibraryAdmin
 	 * @throws IOException
 	 */
 	public FileParser(Path p, TreeMap<String, MusicLibObj> musicLibrary) throws IOException{
@@ -46,6 +50,12 @@ public class FileParser {
 		readFiles();
 	}
 	
+	/**
+	 * Constructs a new FileParser specified by the given arguments
+	 * @param p the path p from where to start the search for audiofiles
+	 * @param progressListener a class that can track the progress of the fileparser
+	 * @throws IOException
+	 */
 	public FileParser(Path p, TreeMap<String, MusicLibObj> musicLibrary, ProgressListener progressListener) throws IOException{
 		this.musicLibrary = musicLibrary;
 		this.rootDir = p;
@@ -54,6 +64,11 @@ public class FileParser {
 		readFiles();
 	}
 	
+	/**
+	 * Updates the Progress class and notify the observer
+	 * @param i the number of the currently processed file
+	 * @param s the name of the currently processed file
+	 */
 	private void updateProgress(int i, String s) {
 		progress.update(i, s);
 		for(ProgressListener p : observers) {
@@ -70,6 +85,11 @@ public class FileParser {
 		Files.walkFileTree(rootDir, new FileVisitor(files));
 	}
 	
+	/**
+	 * Reads all files in the ArrayList obtained from the FileVisitor,
+	 * updates the progress and invokes the parse() method
+	 * @throws IOException
+	 */
 	private void readFiles() throws IOException{
 		progress = new Progress();
 		progress.setMax(files.size()-1);
@@ -112,46 +132,53 @@ public class FileParser {
 	private String artistKey;
 	
 	/**
-	 * 
+	 * Extracts the meta data from a file and write it to music library
 	 * @param f File to parse
 	 * @throws FileNotFoundException
-	 * @throws IOException
+	 * @throws IOException 
 	 * @throws SAXException
 	 * @throws TikaException
 	 */
 	public void parse(File f) throws FileNotFoundException, IOException, 
 												SAXException, TikaException {
-		
+		//try with resources
+		//parse meta data
 		try(FileInputStream fin = new FileInputStream(f)){
 			parser.parse(fin, defaultHandler, metadata, new ParseContext());	
 		}
 		
+		//saves meta data 
 		title = metadata.get("title");
 		trackNr = metadata.get(XMPDM.TRACK_NUMBER);
 		artistName = metadata.get(XMPDM.ARTIST);
 		albumName = metadata.get(XMPDM.ALBUM);
+		
+		//necessary because of the id3 tag (value could be not parseable)
 		try {
 			duration = Float.parseFloat(metadata.get(XMPDM.DURATION));
 		}catch(NumberFormatException e) {
 			
 		}
 		
+		//necessary because of the id3 tag (value could be not parseable)
 		try {
 			releaseDate = Integer.parseInt(metadata.get(XMPDM.RELEASE_DATE));
 		}catch(NumberFormatException e) {
 			releaseDate = -1;
 		}
 		
-		
+		//checks if the title is empty if so uses the filename as title
 		if(title.isEmpty()) {
 			title = f.getName();
 		}
 		
+		//checks if the artist name is empty if so uses default value 
 		if(artistName.isEmpty()) {
 			artistName = "Unknown";
 			artistKey = artistName.toLowerCase();
 		}
 		
+		//checks if the album name is empty if so uses default value 
 		if(albumName.isEmpty()) {
 			albumName = "Unknown";
 			albumKey = albumName.toLowerCase();
