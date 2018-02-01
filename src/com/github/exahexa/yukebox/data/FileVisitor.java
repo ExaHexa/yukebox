@@ -14,12 +14,19 @@ import java.util.ArrayList;
 
 /**
  * @author exahexa
+ * Visits all files in a given path and fills an Arraylist
+ * with the Path to all .mp3 files found.
+ * The Path list will be than processed form the FileParser class  
  * 
  */
 public class FileVisitor extends SimpleFileVisitor<Path> {
 	
 	private ArrayList<Path> fileArray;
 	
+	/**
+	 * Constructs a new FileVisitor 
+	 * @param fileArray reference to an ArrayList 
+	 */
 	public FileVisitor(ArrayList<Path> fileArray) {
 		this.fileArray = fileArray;
 	}
@@ -43,6 +50,7 @@ public class FileVisitor extends SimpleFileVisitor<Path> {
 
 	/* (non-Javadoc)
 	 * @see java.nio.file.SimpleFileVisitor#visitFile(java.lang.Object, java.nio.file.attribute.BasicFileAttributes)
+	 * Adds a file when it ends with .mp3
 	 */
 	@Override
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attr) throws IOException {
