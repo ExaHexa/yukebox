@@ -69,6 +69,13 @@ public class TestAlbum {
 		Album t = new Album(null, null);
 	}
 	
+	@Test
+	public void testContainsKey() {
+		Album album = new Album("test", "test");
+		AudioFile a = new AudioFile("name", "1", 1, "test", "test", "test", "test");
+		album.add(a);
+		assertTrue(album.containsKey("name"));
+	}
 	
 
 }

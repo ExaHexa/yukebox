@@ -11,6 +11,10 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.github.exahexa.yukebox.data.Album;
+import com.github.exahexa.yukebox.data.Artist;
+import com.github.exahexa.yukebox.data.AudioFile;
+
 /**
  * @author exahexa
  *
@@ -47,7 +51,14 @@ public class TestArtist {
 
 	@Test
 	public void test() {
-		fail("Not yet implemented");
+		Artist a = new Artist("test");
+		Album album = new Album("test", "test");
+		a.add(album);
+		assertTrue(a.contains(album));
+		assertTrue(a.containsKey(album.getName()));
+		//AudioFile af = new AudioFile("name", "1", 1, "test", "test", "test", "test");
+		//album.add(af);
+		//assertTrue(album.containsKey("name"));
 	}
 
 }

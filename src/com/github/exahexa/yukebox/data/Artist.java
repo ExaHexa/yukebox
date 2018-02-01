@@ -4,7 +4,8 @@
 package com.github.exahexa.yukebox.data;
 
 import java.io.Serializable;
-import java.util.HashMap;
+import java.util.Collection;
+import java.util.TreeMap;
 
 /**
  * @author exahexa
@@ -19,7 +20,7 @@ public class Artist implements Serializable, MusicLibObj{
 	
 	private String name;
 	//private HashMultimap<String, Album> albums;
-	private HashMap<String, Album> albums;
+	private TreeMap<String, MusicLibObj> albums;
 		
 	/**
 	 * 
@@ -32,19 +33,15 @@ public class Artist implements Serializable, MusicLibObj{
 		else {
 			throw new IllegalArgumentException();
 		}
-		this.albums = new HashMap<String, Album>();
+		this.albums = new TreeMap<String, MusicLibObj>();
 		//this.albums = HashMultimap.create();
 	}
 	
-	
-	/**
-	 * 
-	 * @param album
-	 */
-	public void addAlbum(Album album) {
-		if(album != null) {
-			if(!containsAlbum(album)) {
-				this.albums.put(album.getName().toLowerCase(), album);
+	@Override
+	public void add(MusicLibObj e) {
+		if(e != null) {
+			if(!contains(e)) {
+				albums.put(e.getName().toLowerCase(), e);
 			}
 			else {
 				throw new ElementAlreadyExistsException();
@@ -55,33 +52,39 @@ public class Artist implements Serializable, MusicLibObj{
 		}
 		
 	}
-	
-	/**
-	 * 
-	 * @param album
-	 * @return
-	 */
-	public boolean containsAlbum(Album album) {
-		return !albums.isEmpty() && albums.containsKey(
-						album.getName().toLowerCase());
+
+
+	@Override
+	public void delete(MusicLibObj e) {
+		albums.remove(e.getName().toLowerCase(), e);
+		
 	}
-	
-	public boolean containsAlbumByKey(String albumName) {
-		return !albumName.isEmpty() && albums.containsKey(albumName.toLowerCase());
+
+
+	@Override
+	public boolean contains(MusicLibObj e) {
+		return albums.containsKey(e.getName().toLowerCase());
 	}
-	
-	/**
-	 * 
-	 * @param album
-	 */
-	public void deleteAlbum(Album album) {
-		this.albums.remove(album.getName().toLowerCase(), album);
+
+
+	@Override
+	public boolean containsKey(String key) {
+		return !key.isEmpty() && albums.containsKey(key.toLowerCase());
 	}
+
+
+	@Override
+	public Collection<MusicLibObj> getValues() {
+		return albums.values();
+	}
+
+	
 		
 	/**
 	 * 
 	 * @return
 	 */
+	@Override
 	public String getName() {
 		return this.name;
 	}
@@ -90,6 +93,7 @@ public class Artist implements Serializable, MusicLibObj{
 	 * 
 	 * @param name
 	 */
+	@Override
 	public void setName(String name) {
 		if(name != null && !name.isEmpty()) {
 			this.name = name;
@@ -100,11 +104,16 @@ public class Artist implements Serializable, MusicLibObj{
 		
 	}
 	
+	@Override
+	public boolean isLeaf() {
+		return false;
+	}
+	
 	/**
 	 * 
 	 * @return
 	 */
-	public HashMap<String, Album> getAlbums(){
+	public TreeMap<String, MusicLibObj> getAlbums(){
 		return this.albums;
 	}
 
@@ -118,6 +127,8 @@ public class Artist implements Serializable, MusicLibObj{
 				&& (this.albums.equals( ((Artist)obj).getAlbums() ));
 	}
 
+
+	
 
 
 }

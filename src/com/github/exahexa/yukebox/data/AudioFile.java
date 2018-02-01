@@ -4,6 +4,7 @@
 package com.github.exahexa.yukebox.data;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 /**
  * @author exahexa
@@ -203,6 +204,41 @@ public class AudioFile implements Serializable, MusicLibObj{
 				&& (this.fileName.equals( ((AudioFile)obj).getFileName() ))
 				&& (this.trackNr == ((AudioFile)obj).getTrackNr() )
 				&& (this.duration == ((AudioFile)obj).getDuration() );
+	}
+
+	@Override
+	public void add(MusicLibObj e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void delete(MusicLibObj e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean contains(MusicLibObj e) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean containsKey(String key) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Collection<MusicLibObj> getValues() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public boolean isLeaf() {
+		return true;
 	}
 	
 

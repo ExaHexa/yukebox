@@ -4,6 +4,7 @@
 package com.github.exahexa.yukebox.data;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 import com.google.common.collect.HashMultimap;
 
@@ -20,7 +21,7 @@ public class Album implements Serializable, MusicLibObj{
 	
 	private String name;
 	private int releaseDate;
-	private HashMultimap<String, AudioFile> tracks;
+	private HashMultimap<String, MusicLibObj> tracks;
 	
 	private String artist;
 	
@@ -56,15 +57,11 @@ public class Album implements Serializable, MusicLibObj{
 		this.tracks = HashMultimap.create();
 	}
 	
-	
-	/**
-	 * 
-	 * @param track
-	 */
-	public void addTrack(AudioFile track) {
-		if(track != null) {
-			if(!containsTrack(track)) {
-				this.tracks.put(track.getName().toLowerCase(), track);
+	@Override
+	public void add(MusicLibObj e) {
+		if(e != null) {
+			if(!contains(e)) {
+				this.tracks.put(e.getName().toLowerCase(), e);
 			}
 			else {
 				throw new ElementAlreadyExistsException();
@@ -74,30 +71,39 @@ public class Album implements Serializable, MusicLibObj{
 		else {
 			throw new IllegalArgumentException();
 		}
+		
+	}
+
+	@Override
+	public void delete(MusicLibObj e) {
+		tracks.remove(e.getName().toLowerCase(), e);
+		
+	}
+
+	@Override
+	public boolean contains(MusicLibObj e) {
+		return tracks.containsEntry(e.getName().toLowerCase(), e);
+	}
+
+	@Override
+	public boolean containsKey(String key) {
+		return !key.isEmpty() && tracks.containsKey(key.toLowerCase());
 	}
 	
+	@Override
+	public boolean isLeaf() {
+		return false;
+	}
+
+	@Override
+	public Collection<MusicLibObj> getValues() {
+		return tracks.values();
+	}
 	/**
 	 * 
-	 * @param track
 	 * @return
 	 */
-	public boolean containsTrack(AudioFile track) {
-		return !tracks.isEmpty() && tracks.containsEntry(
-									 track.getName().toLowerCase(), track);
-	}
-	
-	/**
-	 * 
-	 * @param track
-	 */
-	public void deleteTrack(AudioFile track) {
-		this.tracks.remove(track.getName().toLowerCase(), track);
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
+	@Override
 	public String getName() {
 		return this.name;
 	}
@@ -106,6 +112,7 @@ public class Album implements Serializable, MusicLibObj{
 	 * 
 	 * @param name
 	 */
+	@Override
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -114,7 +121,7 @@ public class Album implements Serializable, MusicLibObj{
 	 * 
 	 * @return
 	 */
-	public HashMultimap<String, AudioFile> getTracks(){
+	public HashMultimap<String, MusicLibObj> getTracks(){
 		return this.tracks;
 	}
 	
@@ -155,5 +162,7 @@ public class Album implements Serializable, MusicLibObj{
 				&& (this.name.equals( ((Album)obj).getName() ))
 				&& (this.tracks.equals( ((Album)obj).getTracks() ));
 	}
+
+
 
 }

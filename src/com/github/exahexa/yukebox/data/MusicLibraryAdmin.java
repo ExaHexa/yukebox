@@ -9,7 +9,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.HashMap;
+import java.nio.file.Path;
+import java.util.Collection;
+import java.util.TreeMap;
+
+import javafx.scene.media.Media;
 
 
 /**
@@ -18,90 +22,103 @@ import java.util.HashMap;
  */
 public class MusicLibraryAdmin {
 	
-	private HashMap<String, Artist> artists;
-	private int initCapacity = 167;
+	private TreeMap<String, MusicLibObj> artists;
+	private TreeMap<String, MusicLibObj> albums;
 	private String filePath = "resources/db/music.db";
 	
+	
 	public MusicLibraryAdmin() {
-		artists = new HashMap<String, Artist>(initCapacity);
-		try {
-			deserialize();
-		}catch(IOException e) {
-			System.out.println("file not found");
-			try {
-				parse();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}			
-		}catch(ClassNotFoundException e) {
-			System.out.println("class not found");
-		}
+		artists = new TreeMap<String, MusicLibObj>();
 	}
 	
-	public void addArtist(Artist artist) {
-		if(artist != null) {
-			if(!containsArtist(artist)) {
-				artists.put(artist.getName().toLowerCase(), artist);
-			}
-			else {
-				throw new ElementAlreadyExistsException();
-			}
-		}
-		else {
-			throw new IllegalArgumentException();
-		}
-		
-	}
-	
-	public void addAlbum(Album album) {
-		artists.get(album.getArtist()).addAlbum(album);
-	}
-	
-	public void addTrack(AudioFile track) {
-		artists.get(track.getArtist()).getAlbums().get(
-					track.getAlbum()).addTrack(track);
-	}
-	
-	public boolean containsArtist(Artist artist) {
-		return !artists.isEmpty() && artists.containsKey(
-									 artist.getName().toLowerCase());
-	}
-	
-	public boolean containsArtistByKey(String artistName) {
-		return !artistName.isEmpty() && artists.containsKey(
-										artistName.toLowerCase());
-	}
-	
-	public boolean containsAlbumByKey(String artistName, String albumName) {
-		return !artistName.isEmpty() && !albumName.isEmpty()
-				&& artists.get(artistName.toLowerCase())
-								.containsAlbumByKey(albumName);
+	public void loadMusicLib() throws ClassNotFoundException, IOException {
+		deserialize();
 	}
 	
 	
-	
-	public void parse() throws IOException{
-		new FileParser("/home/exahexa/Music/Music/", artists);	
+	public void parse(Path p) throws IOException{
+		new FileParser(p , artists);	
 		serialize();
 	}
 	
-	public HashMap<String, Artist> getMusicLibrary(){
+	public void parse(Path p, ProgressListener pL) throws IOException{
+		new FileParser(p , artists, pL);	
+		serialize();
+	}
+	
+	public TreeMap<String, MusicLibObj> getMusicLibraryTree(){
 		return artists;
 	}
 	
-	public void dbOutput() {
-		for(Artist value : artists.values()) {
-			System.out.println(value.getName());
-			for(Album val : value.getAlbums().values()) {
-				System.out.println("	" +val.getName());
-				for(AudioFile v : val.getTracks().values()) {
-					System.out.println("		" + v.getName());
+	public Collection<MusicLibObj> getMusicLibrary(){
+		return artists.values();
+	}
+	
+	public Collection<MusicLibObj> getAlbums(){
+		if(albums == null) {
+			createAlbumMap();
+		}		
+		return albums.values();
+	}
+	
+	public boolean containsKey(String key) {
+		key = key.toLowerCase();
+		if(albums == null) {
+			createAlbumMap();
+		}
+		return (artists.containsKey(key) || albums.containsKey(key));
+	}
+	
+	public boolean isAlbum(String key) {
+		key = key.toLowerCase();
+		if(albums == null) {
+			createAlbumMap();
+		}
+		return albums.containsKey(key);
+	}
+	
+	public MusicLibObj getByName(String key){
+		key = key.toLowerCase();
+		if(artists.containsKey(key)) {
+			return artists.get(key);
+		}
+		else {
+			if(albums == null) {
+				createAlbumMap();
+			}
+			if(albums.containsKey(key)) {
+				return albums.get(key);
+			}
+		}
+		return null;
+	}
+	
+	public Collection<MusicLibObj> getCollectionByName(String key){
+		key = key.toLowerCase();
+		if(artists.containsKey(key)) {
+			return artists.get(key).getValues();
+		}
+		else {
+			if(albums == null) {
+				createAlbumMap();
+			}
+			if(albums.containsKey(key)) {
+				return albums.get(key).getValues();
+			}
+		}
+		return null;
+	}
+	
+	private void createAlbumMap() {
+		albums = new TreeMap<String, MusicLibObj>();
+		for(MusicLibObj e : artists.values()) {
+			for(MusicLibObj album : e.getValues()) {
+				if(album instanceof Album) {
+					albums.put(album.getName().toLowerCase(), album);
 				}
 			}
 		}
 	}
-	
 
 	private void serialize() throws IOException{
 		try(ObjectOutputStream oos = new ObjectOutputStream(
@@ -116,10 +133,10 @@ public class MusicLibraryAdmin {
 		if(f.exists()) {
 			try(ObjectInputStream ois = new ObjectInputStream(
 										new FileInputStream(filePath));){
-				artists = (HashMap<String, Artist>) ois.readObject();
+				artists = (TreeMap<String, MusicLibObj>) ois.readObject();
 			}
-		}else{
-			throw new IOException();
+		}else {
+			throw new FileNotFoundException();
 		}
 				
 	}

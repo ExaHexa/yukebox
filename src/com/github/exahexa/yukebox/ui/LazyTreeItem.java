@@ -3,8 +3,6 @@
  */
 package com.github.exahexa.yukebox.ui;
 
-import com.github.exahexa.yukebox.data.Album;
-import com.github.exahexa.yukebox.data.Artist;
 import com.github.exahexa.yukebox.data.AudioFile;
 import com.github.exahexa.yukebox.data.MusicLibObj;
 
@@ -56,17 +54,8 @@ public class LazyTreeItem extends TreeItem<MusicLibObj> {
 						  loadChildren(TreeItem<MusicLibObj> treeItem) {
 		loaded = true;
 		ObservableList<TreeItem<MusicLibObj>> children = FXCollections.observableArrayList();
-		if(treeItem.getValue() instanceof Artist) {
-			Artist a = (Artist) treeItem.getValue();
-			TreeMap<String, Album> albums = new TreeMap<String, Album>(a.getAlbums());
-			for(Album album : albums.values()) {
-				children.add(new LazyTreeItem(album));
-			}
-		}else if(treeItem.getValue() instanceof Album) {
-			Album a = (Album) treeItem.getValue();
-			for(AudioFile track : a.getTracks().values()) {
-				children.add(new LazyTreeItem(track));
-			}
+		for(MusicLibObj e : treeItem.getValue().getValues()) {
+			children.add(new LazyTreeItem(e));
 		}
 		return children;
 	}

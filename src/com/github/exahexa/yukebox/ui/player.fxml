@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.TilePane?>
+
+<AnchorPane id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="104.0" prefWidth="960.0" stylesheets="@css/player.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <GridPane layoutX="89.0" layoutY="19.0" prefHeight="128.0" prefWidth="960.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="350.99999237060547" minWidth="0.0" prefWidth="190.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="702.0" minWidth="10.0" prefWidth="572.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="244.6666259765625" minWidth="10.0" prefWidth="190.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <GridPane prefHeight="109.0" prefWidth="571.0" GridPane.columnIndex="1">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <TilePane alignment="CENTER" prefHeight="59.0" prefWidth="575.0">
+                     <children>
+                        <Button fx:id="random_button" mnemonicParsing="false">
+                           <graphic>
+                              <ImageView>
+                                 <image>
+                                    <Image url="@../../../../../../resources/pic/png/t/shuffle_h.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Button fx:id="backward_button" mnemonicParsing="false" />
+                        <Button fx:id="play_button" mnemonicParsing="false">
+                           <graphic>
+                              <ImageView>
+                                 <image>
+                                    <Image url="@../../../../../../resources/pic/png/play_h2.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Button fx:id="forward_button" mnemonicParsing="false" />
+                        <Button fx:id="repeat_button" mnemonicParsing="false">
+                           <graphic>
+                              <ImageView>
+                                 <image>
+                                    <Image url="@../../../../../../resources/pic/png/t/replay_h.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                     </children>
+                  </TilePane>
+                  <HBox alignment="CENTER" prefHeight="35.0" prefWidth="575.0" GridPane.rowIndex="1">
+                     <children>
+                        <Label fx:id="time_current" text="0:00" />
+                        <Slider fx:id="duration_slider" prefHeight="16.0" prefWidth="348.0" />
+                        <Label fx:id="time_max" text="0:00" />
+                     </children>
+                  </HBox>
+               </children>
+            </GridPane>
+            <FlowPane alignment="CENTER_RIGHT" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2">
+               <children>
+                  <Button fx:id="volume_button" mnemonicParsing="false">
+                     <graphic>
+                        <ImageView>
+                           <image>
+                              <Image url="@../../../../../../resources/pic/png/t/audio_h.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Slider fx:id="volume_slider" />
+               </children>
+            </FlowPane>
+         </children>
+      </GridPane>
+   </children>
+</AnchorPane>

@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.TreeMap;
 
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
@@ -27,10 +27,11 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class FileParser {
 	
-	private String rootDir;
-	
+	private Path rootDir;
+	private ArrayList<ProgressListener> observers = new ArrayList<ProgressListener>();
 	private ArrayList<Path> files = new ArrayList<Path>();
-	private HashMap<String, Artist> musicLibrary;
+	private TreeMap<String, MusicLibObj> musicLibrary;
+	private Progress progress;
 	
 	/**
 	 * 
@@ -38,11 +39,26 @@ public class FileParser {
 	 * @param musicLibrary
 	 * @throws IOException
 	 */
-	public FileParser(String rootDir, HashMap<String, Artist> musicLibrary) throws IOException{
+	public FileParser(Path p, TreeMap<String, MusicLibObj> musicLibrary) throws IOException{
 		this.musicLibrary = musicLibrary;
-		this.rootDir = rootDir;
+		this.rootDir = p;
 		findFiles();
 		readFiles();
+	}
+	
+	public FileParser(Path p, TreeMap<String, MusicLibObj> musicLibrary, ProgressListener progressListener) throws IOException{
+		this.musicLibrary = musicLibrary;
+		this.rootDir = p;
+		observers.add(progressListener);
+		findFiles();
+		readFiles();
+	}
+	
+	private void updateProgress(int i, String s) {
+		progress.update(i, s);
+		for(ProgressListener p : observers) {
+			p.progressChange(progress);
+		}
 	}
 	
 	/**
@@ -51,12 +67,14 @@ public class FileParser {
 	 * @throws IOException
 	 */
 	private void findFiles() throws IOException{
-		File f = new File(rootDir);
-		Files.walkFileTree(f.toPath(), new FileVisitor(files));
+		Files.walkFileTree(rootDir, new FileVisitor(files));
 	}
 	
 	private void readFiles() throws IOException{
+		progress = new Progress();
+		progress.setMax(files.size()-1);
 		for(int i = 0; i < files.size(); i++) {
+			updateProgress(i, files.get(i).getFileName().toString());
 			try {
 				parse(files.get(i).toFile());
 			} catch (FileNotFoundException e) {
@@ -141,8 +159,6 @@ public class FileParser {
 		artistKey = artistName.toLowerCase();
 		albumKey = albumName.toLowerCase();
 		
-		System.out.println(f.getAbsolutePath());
-		
 		//checks if artist already exists in database if not 
 		//create new artist
 		if(!musicLibrary.containsKey(artistKey) ){
@@ -150,24 +166,24 @@ public class FileParser {
 			musicLibrary.put(artistKey, artist);
 		}
 		
-		//check if album already exists in database if not 
-		//create new album
-		if(!musicLibrary.get(artistKey).containsAlbumByKey(albumName)) {
+		//checks if album already exists in database if not 
+		//creates new album
+		if(!musicLibrary.get(artistKey).containsKey(albumName)) {
 			if(releaseDate != -1) {
 				album = new Album(albumName, artistName, releaseDate);
 			}
 			else {
 				album = new Album(albumName, artistName);
 			}			
-			musicLibrary.get(artistKey).addAlbum(album);	
+			musicLibrary.get(artistKey).add(album);	
 		}
 		
 		//add track to database
 		track = new AudioFile(title, trackNr, duration,
 							  f.getAbsolutePath(), f.getName(),
 							  artistName, albumName);
-		musicLibrary.get(artistKey).getAlbums()
-					.get(albumKey).addTrack(track);
+		((Artist) musicLibrary.get(artistKey)).getAlbums()
+					.get(albumKey).add(track);
 		
 	}
 	

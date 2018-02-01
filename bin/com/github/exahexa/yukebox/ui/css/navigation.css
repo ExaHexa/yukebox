@@ -1,0 +1,40 @@
+#root{
+    -fx-background-color: #355264;
+}
+
+#box{
+	-fx-padding: 10;
+}
+
+.button {
+	-fx-alignment:center ;
+    -fx-background-color:  #355264;
+    -fx-background-insets: 0,0,0,0;
+    -fx-background-radius: 0,0,0,0;
+    -fx-padding: 1 10 1 10;
+    -fx-text-fill: #1B1B1B;
+    -fx-font-size: 12px;
+    -fx-border-radius: 0,0,0,0;
+}
+
+.button:hover{
+	-fx-text-fill: #E0DCDD;
+}
+
+.context-menu{
+	-fx-background-color: #2B2B2B;
+	-fx-opacity: 0.85;
+}
+
+.menu-item{
+	-fx-padding: 2;
+	-fx-background-color: transparent;
+}
+
+.menu-item .label{
+	-fx-text-fill: #E0DCDD;
+}
+
+.menu-item:focused {
+	-fx-background-color:#355264;
+}
