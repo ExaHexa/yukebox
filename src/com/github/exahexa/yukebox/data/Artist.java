@@ -9,7 +9,11 @@ import java.util.TreeMap;
 
 /**
  * @author exahexa
- *
+ * 
+ * Abstract representation if an artist. This class implements 
+ * Serializable and MusicLibObj. Artist contains a map of MusicLibObj
+ * that should be instance of Album, and the name of the artist.
+ * 
  */
 public class Artist implements Serializable, MusicLibObj{
 	
@@ -23,8 +27,8 @@ public class Artist implements Serializable, MusicLibObj{
 	private TreeMap<String, MusicLibObj> albums;
 		
 	/**
-	 * 
-	 * @param name
+	 * Constructs a new Artist specified by the argument name 
+	 * @param name the name of the artist
 	 */
 	public Artist(String name) {
 		if(name != null && !name.isEmpty()) {
@@ -37,42 +41,49 @@ public class Artist implements Serializable, MusicLibObj{
 		//this.albums = HashMultimap.create();
 	}
 	
+	/**
+	 * @see MusicLibObj#add(MusicLibObj)
+	 * The element to add can not be null 
+	 */
 	@Override
 	public void add(MusicLibObj e) {
-		if(e != null) {
-			if(!contains(e)) {
-				albums.put(e.getName().toLowerCase(), e);
-			}
-			else {
-				throw new ElementAlreadyExistsException();
-			}
-		}
-		else {
-			throw new IllegalArgumentException();
+		if(e != null && !contains(e)) {
+			albums.put(e.getName().toLowerCase(), e);
 		}
 		
 	}
 
-
+	/**
+	 * @see MusicLibObj#delete(MusicLibObj)
+	 * 
+	 */
 	@Override
 	public void delete(MusicLibObj e) {
 		albums.remove(e.getName().toLowerCase(), e);
 		
 	}
 
-
+	/**
+	 * @see MusicLibObj#contains(MusicLibObj)
+	 * 
+	 */
 	@Override
 	public boolean contains(MusicLibObj e) {
 		return albums.containsKey(e.getName().toLowerCase());
 	}
 
-
+	/*
+	 * (non-Javadoc)
+	 * @see com.github.exahexa.yukebox.data.MusicLibObj#containsKey(java.lang.String)
+	 */
 	@Override
 	public boolean containsKey(String key) {
 		return !key.isEmpty() && albums.containsKey(key.toLowerCase());
 	}
 
-
+	/**
+	 * @see MusicLibObj#getValues()
+	 */
 	@Override
 	public Collection<MusicLibObj> getValues() {
 		return albums.values();
@@ -81,8 +92,7 @@ public class Artist implements Serializable, MusicLibObj{
 	
 		
 	/**
-	 * 
-	 * @return
+	 * @see MusicLibObj#getName()
 	 */
 	@Override
 	public String getName() {
@@ -90,8 +100,8 @@ public class Artist implements Serializable, MusicLibObj{
 	}
 	
 	/**
-	 * 
-	 * @param name
+	 * @see MusicLibObj#setName(String)
+	 * @param name can not be null or empty
 	 */
 	@Override
 	public void setName(String name) {
@@ -104,6 +114,9 @@ public class Artist implements Serializable, MusicLibObj{
 		
 	}
 	
+	/**
+	 * @see MusicLibObj#isLeaf()
+	 */
 	@Override
 	public boolean isLeaf() {
 		return false;
@@ -118,7 +131,7 @@ public class Artist implements Serializable, MusicLibObj{
 	}
 
 	/**
-	 * @see
+	 * @see Object#equals(Object)
 	 */
 	@Override
 	public boolean equals(Object obj) {
