@@ -78,24 +78,43 @@ public class PlayerController {
 
     private double volume;
     
-    private Image playImg = new Image("file:resources/pic/png/play_h2.png");
-    private Image pauseImg = new Image("file:resources/pic/png/pause_h2.png");
+    
+    /**
+     * Load all images 
+     */
+    private Image playImg = new Image("file:resources/pic/play_h2.png");
+    private Image pauseImg = new Image("file:resources/pic/pause_h2.png");
     private ImageView playPauseIcon = new ImageView(playImg);
     
-    private Image prevImg = new Image("file:resources/pic/png/t/prev_track_h.png");
-    private Image prevImgH = new Image("file:resources/pic/png/t/prev_track.png");
+    private Image prevImg = new Image("file:resources/pic/prev_track_h.png");
+    private Image prevImgH = new Image("file:resources/pic/prev_track.png");
     private ImageView prevIcon = new ImageView(prevImg);
     
-    private Image nextImg = new Image("file:resources/pic/png/t/next_track_h.png");
-    private Image nextImgH = new Image("file:resources/pic/png/t/next_track.png");
+    private Image nextImg = new Image("file:resources/pic/next_track_h.png");
+    private Image nextImgH = new Image("file:resources/pic/next_track.png");
     private ImageView nextIcon = new ImageView(nextImg);
+    
+    private Image shuffleImg = new Image("file:resources/pic/shuffle_h.png");
+    private Image shuffleImgA = new Image("file:resources/pic/shuffle_a.png");
+    private ImageView shuffleIcon = new ImageView(shuffleImg);
+    
+    private Image repeatImg = new Image("file:resources/pic/replay_h.png");
+    private Image repeatImgA = new Image("file:resources/pic/replay_a.png");
+    private ImageView repeatIcon = new ImageView(repeatImg);
+    
+    private Image volumeImg = new Image("file:resources/pic/audio_h.png");
+    private ImageView volumeIcon = new ImageView(volumeImg);
     
     @FXML // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
     	
     	volume = 100.00;
+    	play_button.setGraphic(playPauseIcon);
     	forward_button.setGraphic(nextIcon);
     	backward_button.setGraphic(prevIcon);
+    	random_button.setGraphic(shuffleIcon);
+    	repeat_button.setGraphic(repeatIcon);
+    	volume_button.setGraphic(volumeIcon);
     	
     	forward_button.setOnAction(event->{
     		nextMedia(main.getNextMedia());    		
@@ -212,6 +231,9 @@ public class PlayerController {
     	
     }
     
+    /**
+     * 
+     */
     protected void updateValues() {
     	  if(time_current != null && duration_slider != null && volume_slider != null) {
     	     Platform.runLater(new Runnable() {
@@ -234,6 +256,13 @@ public class PlayerController {
     	  }
     	}
     
+    
+    /**
+     * 
+     * @param elapsed
+     * @param duration
+     * @return
+     */
     private String formatTime(Duration elapsed, Duration duration) {
     	   int intElapsed = (int)Math.floor(elapsed.toSeconds());
     	   int elapsedHours = intElapsed / (60 * 60);
