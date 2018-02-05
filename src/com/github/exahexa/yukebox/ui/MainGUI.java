@@ -126,19 +126,10 @@ public class MainGUI extends Application {
 	
 	/**
 	 * 
-	 * @param audioFile
-	 * @return
-	 */
-	public File getFile(AudioFile audioFile) {
-		return new File(audioFile.getFilePath());
-	}
-	
-	/**
-	 * 
 	 * @return
 	 */
 	public File getNextMedia() {
-		return getFile(playLAdm.getNext());
+		return new File( ((AudioFile)playLAdm.getNext()).getFilePath()); 
 	}
 	
 	/**
@@ -146,7 +137,7 @@ public class MainGUI extends Application {
 	 * @return
 	 */
 	public File getPreviousMedia() {
-		return getFile(playLAdm.getPrevious());
+		return new File( ((AudioFile)playLAdm.getPrevious()).getFilePath());
 	}
 	
 	/**

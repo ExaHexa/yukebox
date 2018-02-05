@@ -21,7 +21,6 @@ public class Playlist implements Serializable{
 	
 	private String name;
 	private ArrayList<MusicLibObj> playlist;
-	private int indexLastPlayed;
 
 	/**
 	 * Constructs a new Playlist whose name is specified by the argument 
@@ -31,7 +30,6 @@ public class Playlist implements Serializable{
 	public Playlist(String name) {
 		this.name = name;
 		playlist = new ArrayList<MusicLibObj>();
-		indexLastPlayed = 0;
 	}
 	
 	/**
@@ -76,35 +74,24 @@ public class Playlist implements Serializable{
 	}
 	
 	/**
-	 * Returns the index of the last played element
-	 * @return the index of the last played element 
-	 */
-	public int getIndexLastPlayed() {
-		return indexLastPlayed;
-	}
-	
-	/**
-	 * Returns the next element 
-	 * @return the next element
-	 */
-	public MusicLibObj getNext() {
-		return getAudioFileByIndex((indexLastPlayed +1));
-	}
-	
-	/**
-	 * Returns the element at the specified position in this list
+	 * Returns the element at the specified position in this list,
+	 * if the index is greater than this playlist size returns the 
+	 * first element
 	 * @param index index of the element to return
 	 * @return the element at the specified position in this list
 	 */
 	public MusicLibObj getAudioFileByIndex(int index) {
-		if(index < playlist.size()) {
-			indexLastPlayed = index;
-			return playlist.get(index);
+		if(!playlist.isEmpty()) {
+			if(index < playlist.size()) {
+				return playlist.get(index);
+			}
+			else {
+				return playlist.get(0);
+			}
+		}else {
+			throw new IllegalStateException();
 		}
-		else {
-			indexLastPlayed = 0;
-			return playlist.get(0);
-		}
+		
 	}
 	
 	/**
