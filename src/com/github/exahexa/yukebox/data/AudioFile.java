@@ -205,8 +205,7 @@ public class AudioFile implements Serializable, MusicLibObj{
 	 */
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return name;
 	}
 	
 	/**
